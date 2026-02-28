@@ -44,10 +44,10 @@ def detect_scam(message: Message):
     # Cap score
     score = min(score, 95)
 
-    if score >= 75:
+    if score >= 65:
         label = "Scam"
         explanation = "Multiple high-risk indicators detected including urgency or suspicious links."
-    elif score >= 40:
+    elif score >= 35:
         label = "Suspicious"
         explanation = "Some scam-related patterns detected. Proceed with caution."
     else:
