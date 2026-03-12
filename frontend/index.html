@@ -3,7 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FinSentinel – AI Financial Scam Detector</title>
+<title>FinSentinel – AI Financial Scam Detector for India</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="FinSentinel is a free AI-powered financial scam detector for India. Analyze suspicious messages, URLs, call transcripts and screenshots instantly. Get risk scores, red flags and safety tips. Includes UPI fraud checker, live scam tracker, India heatmap and bank helpline directory." />
+  <meta name="keywords" content="scam detector India, financial fraud detection, UPI fraud checker, AI scam detection, cybercrime India, phishing detector, OTP scam, KYC fraud, bank fraud India, FinSentinel, scam message analyzer, 1930 cybercrime helpline" />
+  <meta name="author" content="Nihit & Anchal" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kaleidoscopic-pony-52e4b9.netlify.app/" />
+
+  <!-- Open Graph (WhatsApp / Facebook preview) -->
+  <meta property="og:title" content="FinSentinel – AI Financial Scam Detector for India" />
+  <meta property="og:description" content="Free AI-powered scam detection. Analyze messages, URLs & screenshots. UPI fraud checker, live scam tracker, India heatmap & bank helplines." />
+  <meta property="og:url" content="https://kaleidoscopic-pony-52e4b9.netlify.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="FinSentinel" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="FinSentinel – AI Financial Scam Detector for India" />
+  <meta name="twitter:description" content="Free AI tool to detect financial scams in India. Analyze messages, URLs, screenshots & UPI IDs instantly." />
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
   /* ── THEME VARIABLES ── */
@@ -661,6 +680,7 @@
   </ul>
   <div class="nav-right">
     <span class="theme-icon" id="themeIcon">🌙</span>
+    <button onclick="showKeyModal()" style="padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);font-family:var(--mono);font-size:11px;cursor:pointer;color:var(--text2)" title="Set API Key">🔑 API Key</button>
     <div class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode"></div>
     <button class="helpline-btn" onclick="openHelpline()">
       <span class="helpline-dot"></span>
@@ -685,6 +705,7 @@
 
 <!-- ANALYZER -->
 <section id="analyzer">
+  <div id="keyStatus" style="font-family:var(--mono);font-size:12px;margin-bottom:12px;padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">Loading...</div>
   <div class="analyzer-card">
     <div class="analyzer-header">
       <div class="dots"><span></span><span></span><span></span></div>
@@ -1159,8 +1180,9 @@ async function callAI(prompt) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": "",
-      "anthropic-version": "2023-06-01"
+      "x-api-key": getApiKey(),
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
     },
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
@@ -1181,7 +1203,12 @@ Respond ONLY with a valid JSON object:
 Rules: SCAM=70-100, SUSPICIOUS=30-69, SAFE=0-29. Empty redFlags if SAFE.`;
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": getApiKey(),
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    },
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1000,
@@ -1767,5 +1794,22 @@ window.addEventListener('scroll', () => {
   document.querySelectorAll('.nav-links a').forEach(a => { a.classList.toggle('active', a.getAttribute('href') === `#${cur}`); });
 });
 </script>
+
+<!-- API KEY MODAL -->
+<div id="keyModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
+    <h3 style="font-family:var(--display);margin-bottom:8px">🔑 Enter API Key</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6">
+      FinSentinel uses Claude AI. You need a free Anthropic API key to analyze messages.<br><br>
+      Get one at <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com</a> → API Keys → Create Key
+    </p>
+    <input id="keyInput" type="password" placeholder="sk-ant-api03-..." style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text1);font-family:var(--mono);font-size:13px;margin-bottom:14px;box-sizing:border-box"/>
+    <div style="display:flex;gap:10px">
+      <button onclick="saveKeyModal()" style="flex:1;padding:10px;background:var(--accent);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:var(--display)">Save Key</button>
+      <button onclick="document.getElementById('keyModal').style.display='none'" style="padding:10px 16px;background:var(--surface2);color:var(--text2);border:1px solid var(--border);border-radius:8px;cursor:pointer">Cancel</button>
+    </div>
+    <p style="font-size:11px;color:var(--text3);margin-top:12px">🔒 Key is stored only in your browser. Never sent anywhere except Anthropic.</p>
+  </div>
+</div>
 </body>
 </html>
